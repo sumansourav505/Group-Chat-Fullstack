@@ -1,0 +1,155 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: #f0f0f5;
+}
+
+.container {
+    display: flex;
+    width: 900px;
+    height: 500px;
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.1);
+}
+
+.left-section {
+    width: 40%;
+    background: #0a9c1e;
+    color: white;
+    padding: 40px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.left-section h1 {
+    font-size: 22px;
+    font-weight: 600;
+}
+
+.left-section p {
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.left-section h2 {
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.right-section {
+    width: 60%;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+}
+
+.language-switch {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 14px;
+    color: #888;
+    cursor: pointer;
+}
+
+h2 {
+    font-size: 22px;
+    margin-bottom: 15px;
+}
+
+.input-group {
+    margin-bottom: 15px;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.password {
+    position: relative;
+}
+
+.password i {
+    position: absolute;
+    right: 10px;
+    top: 12px;
+    cursor: pointer;
+}
+
+.terms {
+    display: flex;
+    align-items: center;
+    font-size: 12px;
+    margin-bottom: 15px;
+}
+
+.terms input {
+    margin-right: 10px;
+}
+
+.signup-btn {
+    width: 100%;
+    background: #665dfe;
+    color: white;
+    border: none;
+    padding: 12px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.signup-btn:hover {
+    background: #554cdf;
+}
+
+.or {
+    text-align: center;
+    margin: 15px 0;
+    font-size: 12px;
+    color: #888;
+}
+
+.social-icons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    font-size: 20px;
+    color: #665dfe;
+}
+
+.social-icons i {
+    cursor: pointer;
+}
+
+.login-link {
+    text-align: center;
+    font-size: 14px;
+    margin-top: 15px;
+}
+
+.login-link a {
+    color: #665dfe;
+    font-weight: bold;
+    text-decoration: none;
+}
