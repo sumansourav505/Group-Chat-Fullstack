@@ -13,9 +13,10 @@ loginForm.addEventListener('submit',async function(event){
     const loginData={email,password};
     const loginButton=event.submitter;
     try{
-        const response=await axios.post(`${baseURI}/user/login`,loginData);
+        const response=await axios.post(`${baseURL}/user/login`,loginData);
         if(response.status===200){
-            alert('Login successful!')
+            localStorage.setItem('token',response.data.token);
+            alert('Login successful!');
             loginForm.reset();
         }
     }catch(error){
