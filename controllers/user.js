@@ -27,3 +27,4 @@ exports.signup=async(req,res)=>{
     };
     // res.redirect('/');
 };
+exports.login=async(req,res)=>{};

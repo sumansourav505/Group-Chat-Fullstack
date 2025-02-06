@@ -15,6 +15,7 @@ app.use(express.static(path.join(__dirname,'public')));
 
 //serve static page
 app.get('/signup',(req,res)=>res.sendFile(path.join(__dirname,'views','signUp.html')));
+app.get('/',(req,res)=>res.sendFile(path.join(__dirname,'views','login.html')));
 
 //routes
 app.use('/user',userRoutes);

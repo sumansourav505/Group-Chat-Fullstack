@@ -22,6 +22,7 @@ signUpForm.addEventListener('submit',async function(event){
         console.log(('Signup successful:',response.data));
         alert(response.data.message);
         signUpForm.reset();
+        window.location.href='/';
     }catch(error){
         console.error('Error:',error);
 

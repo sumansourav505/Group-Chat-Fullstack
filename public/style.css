@@ -118,6 +118,16 @@ h2 {
     border-radius: 5px;
     cursor: pointer;
 }
+.login-btn{
+    width: 100%;
+    background: #665dfe;
+    color: white;
+    border: none;
+    padding: 12px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+}
 
 .signup-btn:hover {
     background: #554cdf;
