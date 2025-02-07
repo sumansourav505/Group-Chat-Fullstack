@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         try {
             const response = await axios.post(`${baseURL}/user/signup`, userData);
-            console.log("Signup successful:", response.data);
+            //console.log("Signup successful:", response.data);
             alert(response.data.message);
             signUpForm.reset();
             window.location.href = "/";

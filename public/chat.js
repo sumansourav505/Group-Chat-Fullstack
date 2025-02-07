@@ -1,6 +1,12 @@
-document.addEventListener("DOMContentLoaded", loadMessages);
+document.addEventListener("DOMContentLoaded",()=>{
+    loadMessages();
+    setInterval(loadMessages,1000);
+});
 
 const baseURL = 'http://localhost:4000';
+
+// Retrieve logged-in user ID from localStorage
+const loggedInUserId = localStorage.getItem("userId");
 
 async function loadMessages() {
     try {
@@ -9,7 +15,7 @@ async function loadMessages() {
         });
 
         const messages = response.data;
-        console.log(messages)
+        //console.log(messages);
         const chatBox = document.getElementById("chatBox");
         chatBox.innerHTML = "";
 
@@ -18,11 +24,11 @@ async function loadMessages() {
             messageDiv.classList.add("message");
 
             if (msg.User) {
-                messageDiv.classList.add(msg.User.id === getLoggedInUserId() ? "user-message" : "other-message");
-                messageDiv.innerHTML = `<strong>${msg.User.name}:</strong> ${msg.message}`;
+                messageDiv.classList.add(msg.User.id == loggedInUserId ? "user-message" : "other-message");
+                messageDiv.innerHTML = `<strong>${msg.User.name}:</strong><br> ${msg.message}`;
             } else {
                 messageDiv.classList.add("other-message");
-                messageDiv.innerHTML = `<strong>Unknown:</strong> ${msg.message}`;
+                messageDiv.innerHTML = `<strong>Unknown:</strong><br> ${msg.message}`;
             }
 
             chatBox.appendChild(messageDiv);
@@ -51,19 +57,5 @@ async function sendMessage() {
 
     } catch (error) {
         console.error("Error sending message:", error);
-    }
-}
-
-// Function to get logged-in user ID from token (JWT)
-function getLoggedInUserId() {
-    const token = localStorage.getItem('token');
-    if (!token) return null;
-
-    try {
-        const payload = JSON.parse(atob(token.split('.')[1])); // Decode JWT payload
-        return payload.userId;
-    } catch (error) {
-        console.error("Error decoding token:", error);
-        return null;
     }
 }

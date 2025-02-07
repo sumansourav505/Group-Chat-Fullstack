@@ -17,7 +17,7 @@ const authenticate = async (req, res, next) => {
             return res.status(400).json({ message: 'Invalid token structure.' });
         }
 
-        const user = await User.findByPk(decoded.userId);//3
+        const user = await User.findByPk(decoded.userId,{ attributes: ['id', 'name'] });//3
 
         if (!user) {
             return res.status(404).json({ message: 'User not found.' });
