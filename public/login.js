@@ -18,6 +18,7 @@ loginForm.addEventListener('submit',async function(event){
             localStorage.setItem('token',response.data.token);
             alert('Login successful!');
             loginForm.reset();
+            window.location.href = "/chat";
         }
     }catch(error){
         console.error('Login error:',error);

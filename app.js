@@ -1,26 +1,35 @@
-const express=require('express');
-const path=require('path');
+const express = require('express');
+const path = require('path');
 require('dotenv').config();
-const cors = require("cors");
 const sequelize = require('./config/database');
 
-const userRoutes=require('./routes/user');
+const User = require('./models/user');
+const Chat = require('./models/chat');
 
-const app=express();
+const userRoutes = require('./routes/user');
+const chatRoutes = require('./routes/chat');
 
-//middleware
+const app = express();
+
+// Middleware
 app.use(express.json());
-app.use(express.urlencoded({extended:true}));
-app.use(express.static(path.join(__dirname,'public')));
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, 'public')));
 
-//serve static page
-app.get('/signup',(req,res)=>res.sendFile(path.join(__dirname,'views','signup.html')));
-app.get('/',(req,res)=>res.sendFile(path.join(__dirname,'views','login.html')));
+// Serve static pages
+app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'views', 'login.html')));
+app.get('/signup', (req, res) => res.sendFile(path.join(__dirname, 'views', 'signup.html')));
+app.get('/chat', (req, res) => res.sendFile(path.join(__dirname, 'views', 'chat.html')));
 
-//routes
-app.use('/user',userRoutes);
+// Routes
+app.use('/user', userRoutes);
+app.use('/chat', chatRoutes);
 
-//server start
+// Define associations
+User.hasMany(Chat, { foreignKey: 'userId' });
+Chat.belongsTo(User, { foreignKey: 'userId' });
+
+// Server start
 sequelize
     .sync({})
     .then(() => {
