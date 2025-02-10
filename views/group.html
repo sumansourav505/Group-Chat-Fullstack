@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Group Chat</title>
+    <link rel="stylesheet" href="group.css">
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <h2>Your Groups</h2>
+            <ul id="groupList"></ul>
+            <button onclick="createGroup()">Create Group</button>
+        </div>
+        <div class="chatbox">
+            <h2 id="groupTitle">Select a Group</h2>
+            <div id="messages"></div>
+            <input type="text" id="messageInput" placeholder="Type a message...">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+    <script src="group.js"></script>
+</body>
+</html>

@@ -8,9 +8,8 @@ document.addEventListener("DOMContentLoaded", () => {
 const baseURL = 'http://localhost:4000';
 const chatBox = document.getElementById("chatBox");
 const loggedInUserId = Number(localStorage.getItem("userId"));
-let lastMessageId = Number(localStorage.getItem("lastMessageId")) || 0;
+let lastMessageId = Number(localStorage.getItem("lastMessageId"));
 
-// Load messages from local storage first
 function loadMessagesFromLocalStorage() {
     const storedMessages = JSON.parse(localStorage.getItem("chatMessages"));
 
@@ -33,7 +32,6 @@ async function loadNewMessages() {
         lastMessageId = messages[messages.length - 1].id;
         localStorage.setItem("lastMessageId", lastMessageId);
 
-        // Store only the latest 10 messages
         updateLocalStorage(messages);
 
     } catch (error) {
@@ -70,12 +68,11 @@ function appendMessage(msg) {
 
 // Store only the latest 10 messages in local storage
 function updateLocalStorage(newMessages) {
-    let storedMessages = JSON.parse(localStorage.getItem("chatMessages")) || [];
+    let storedMessages = JSON.parse(localStorage.getItem("chatMessages"));
     
-    // Remove duplicates before storing
-    const uniqueMessages = [...storedMessages, ...newMessages]
+        const uniqueMessages = [...storedMessages, ...newMessages]
         .filter((msg, index, self) => self.findIndex(m => m.id === msg.id) === index)
-        .slice(-10); // Keep only the last 10 messages
+        .slice(-10); 
 
     localStorage.setItem("chatMessages", JSON.stringify(uniqueMessages));
 }
@@ -93,8 +90,7 @@ async function sendMessage() {
         });
 
         messageInput.value = "";
-        loadNewMessages(); // Fetch new messages after sending
-
+        loadNewMessages(); 
     } catch (error) {
         console.error("Error sending message:", error);
     }
