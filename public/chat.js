@@ -1,46 +1,86 @@
-document.addEventListener("DOMContentLoaded",()=>{
-    loadMessages();
-    setInterval(loadMessages,1000);
+
+document.addEventListener("DOMContentLoaded", () => {
+    loadMessagesFromLocalStorage();
+    loadNewMessages();
+    setInterval(loadNewMessages, 1000);
 });
 
 const baseURL = 'http://localhost:4000';
+const chatBox = document.getElementById("chatBox");
+const loggedInUserId = Number(localStorage.getItem("userId"));
+let lastMessageId = Number(localStorage.getItem("lastMessageId")) || 0;
 
-// Retrieve logged-in user ID from localStorage
-const loggedInUserId = localStorage.getItem("userId");
+// Load messages from local storage first
+function loadMessagesFromLocalStorage() {
+    const storedMessages = JSON.parse(localStorage.getItem("chatMessages"));
 
-async function loadMessages() {
+    storedMessages.forEach(msg => appendMessage(msg));
+}
+
+// Fetch only new messages from backend
+async function loadNewMessages() {
     try {
-        const response = await axios.get(`${baseURL}/chat/messages`, {
+        const response = await axios.get(`${baseURL}/chat/messages?lastMessageId=${lastMessageId}`, {
             headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
         });
 
         const messages = response.data;
-        //console.log(messages);
-        const chatBox = document.getElementById("chatBox");
-        chatBox.innerHTML = "";
+        if (!messages.length) return;
 
-        messages.forEach(msg => {
-            const messageDiv = document.createElement("div");
-            messageDiv.classList.add("message");
+        messages.forEach(msg => appendMessage(msg));
 
-            if (msg.User) {
-                messageDiv.classList.add(msg.User.id == loggedInUserId ? "user-message" : "other-message");
-                messageDiv.innerHTML = `<strong>${msg.User.name}:</strong><br> ${msg.message}`;
-            } else {
-                messageDiv.classList.add("other-message");
-                messageDiv.innerHTML = `<strong>Unknown:</strong><br> ${msg.message}`;
-            }
+        // Update lastMessageId only after processing all messages
+        lastMessageId = messages[messages.length - 1].id;
+        localStorage.setItem("lastMessageId", lastMessageId);
 
-            chatBox.appendChild(messageDiv);
-        });
-
-        chatBox.scrollTop = chatBox.scrollHeight;
+        // Store only the latest 10 messages
+        updateLocalStorage(messages);
 
     } catch (error) {
-        console.error("Error loading messages:", error);
+        console.error("Error loading new messages:", error);
     }
 }
 
+// Append new message to chatbox
+function appendMessage(msg) {
+    if (document.querySelector(`[data-id="${msg.id}"]`)) return; // Avoid duplicate messages
+
+    const messageDiv = document.createElement("div");
+    messageDiv.classList.add("message");
+    messageDiv.setAttribute("data-id", msg.id);
+
+    if (msg.User?.id && Number(msg.User.id) === loggedInUserId) {
+        messageDiv.classList.add("user-message");
+    } else {
+        messageDiv.classList.add("other-message");
+    }
+
+    messageDiv.innerHTML = `<strong>${msg.User ? msg.User.name : "Unknown"}:</strong><br> ${msg.message}`;
+    
+    // Check if user is at the bottom before appending
+    const shouldScroll = chatBox.scrollTop + chatBox.clientHeight >= chatBox.scrollHeight - 10;
+    
+    chatBox.appendChild(messageDiv);
+
+    // Auto-scroll only if the user was already at the bottom
+    if (shouldScroll) {
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+}
+
+// Store only the latest 10 messages in local storage
+function updateLocalStorage(newMessages) {
+    let storedMessages = JSON.parse(localStorage.getItem("chatMessages")) || [];
+    
+    // Remove duplicates before storing
+    const uniqueMessages = [...storedMessages, ...newMessages]
+        .filter((msg, index, self) => self.findIndex(m => m.id === msg.id) === index)
+        .slice(-10); // Keep only the last 10 messages
+
+    localStorage.setItem("chatMessages", JSON.stringify(uniqueMessages));
+}
+
+// Send message
 async function sendMessage() {
     const messageInput = document.getElementById("messageInput");
     const message = messageInput.value.trim();
@@ -53,9 +93,10 @@ async function sendMessage() {
         });
 
         messageInput.value = "";
-        loadMessages(); // Refresh chat after sending
+        loadNewMessages(); // Fetch new messages after sending
 
     } catch (error) {
         console.error("Error sending message:", error);
     }
 }
+

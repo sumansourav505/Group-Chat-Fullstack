@@ -1,5 +1,6 @@
 const Chat = require('../models/chat');
 const User = require('../models/user');
+const  {Op} = require("sequelize");
 
 exports.sendMessage = async (req, res) => {
     try {
@@ -19,15 +20,38 @@ exports.sendMessage = async (req, res) => {
     }
 };
 
+// exports.getMessages = async (req, res) => {
+//     try {
+//         const messages = await Chat.findAll({
+//             include: {
+//                 model: User,
+//                 attributes: ['id', 'name'] 
+//             },
+//             order: [['createdAt', 'ASC']]
+//         });
+
+//         res.json(messages);
+//     } catch (error) {
+//         console.error("Error loading messages:", error);
+//         res.status(500).json({ error: 'Internal Server Error' });
+//     }
+// };
+//update backend
 exports.getMessages = async (req, res) => {
     try {
+        const lastMessageId = req.query.lastMessageId || 0;
+
         const messages = await Chat.findAll({
+            where: {
+                id: { [Op.gt]: lastMessageId } // Fetch messages newer than lastMessageId
+            },
             include: {
                 model: User,
-                attributes: [ 'name']  // Fetch username instead of just userId
+                attributes: ['id', 'name'] 
             },
             order: [['createdAt', 'ASC']]
         });
+        console.log(messages);
 
         res.json(messages);
     } catch (error) {
