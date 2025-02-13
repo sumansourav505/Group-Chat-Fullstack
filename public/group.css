@@ -1,0 +1,97 @@
+/* Reset default margin and padding */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+/* Main container for the layout */
+.container {
+    display: flex;
+    height: 100vh;
+}
+
+/* Sidebar styling */
+.sidebar {
+    width: 25%;
+    background-color: #2c3e50;
+    color: white;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Group list styling */
+#groupList {
+    list-style: none;
+    width: 100%;
+    padding: 10px 0;
+}
+
+#groupList li {
+    padding: 10px;
+    background-color: #345e4e;
+    margin: 5px 0;
+    cursor: pointer;
+    text-align: center;
+    border-radius: 5px;
+    transition: background 0.3s;
+}
+
+#groupList li:hover {
+    background-color: #1abc9c;
+}
+
+/* Button styling */
+button {
+    padding: 10px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #1abc9c;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+button:hover {
+    background-color: #16a085;
+}
+
+/* Chatbox styling */
+.chatbox {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 20px;
+    background-color: #ecf0f1;
+}
+
+/* Chat messages section */
+#messages {
+    flex-grow: 1;
+    overflow-y: auto;
+    background: white;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #bdc3c7;
+    margin-bottom: 10px;
+}
+
+/* Message input field */
+#messageInput {
+    width: 80%;
+    padding: 10px;
+    border: 1px solid #bdc3c7;
+    border-radius: 5px;
+}
+
+/* Send button next to the input */
+.chatbox button {
+    width: 15%;
+    margin-left: 5px;
+}

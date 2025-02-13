@@ -26,7 +26,8 @@ loginForm.addEventListener('submit', async function(event) {
 
             alert('Login successful!');
             loginForm.reset();
-            window.location.href = "/chat";
+            //window.location.href = "/chat";
+            window.location.href="/group";
         }
     } catch (error) {
         console.error('Login error:', error);

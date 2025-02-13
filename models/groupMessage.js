@@ -1,19 +1,19 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/database");
-const User = require("../models/user");
-const Group = require("../models/group");
+const User = require("./user");
+const Group = require("./group");
 
-const Message = sequelize.define("Message", {
+const GroupMessage = sequelize.define("GroupMessage", {
     id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
         primaryKey: true,
     },
-    text: {
+    message: {  // Renamed from 'text' to 'message' for consistency with controllers
         type: DataTypes.TEXT,
         allowNull: false,
     },
-    userId: {
+    userId: {  // Renamed from 'memberId' for consistency
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
@@ -33,4 +33,4 @@ const Message = sequelize.define("Message", {
     }
 });
 
-module.exports = Message;
+module.exports = GroupMessage;
