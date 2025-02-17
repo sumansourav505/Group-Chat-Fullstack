@@ -80,6 +80,39 @@ button:hover {
     border-radius: 5px;
     border: 1px solid #bdc3c7;
     margin-bottom: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px; /* Space between messages */
+}
+
+/* General message styling */
+.message {
+    padding: 10px;
+    border-radius: 10px;
+    max-width: 75%;
+    word-wrap: break-word;
+    font-size: 14px;
+    display: inline-block;
+}
+
+/* Sent messages (user's own messages) */
+.sent {
+    align-self: flex-end;
+    background-color: #dcf8c6; /* Light green (WhatsApp-like) */
+    text-align: right;
+}
+
+/* Received messages (messages from others) */
+.received {
+    align-self: flex-start;
+    background-color: #ffffff; /* Light gray */
+    border: 1px solid #ddd;
+}
+
+/* Bold sender name */
+.message strong {
+    font-weight: bold;
+    margin-right: 5px;
 }
 
 /* Message input field */

@@ -16,4 +16,8 @@ router.post("/invite", authenticateController.authenticate, groupController.invi
 router.post("/send-message", authenticateController.authenticate, groupController.sendMessage);
 router.get('/messages/:groupId', authenticateController.authenticate, groupController.getGroupMessages);
 
+// Get all members of a group
+router.get("/members/:groupId", authenticateController.authenticate, groupController.getGroupMembers);
+
+
 module.exports = router;

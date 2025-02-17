@@ -66,20 +66,21 @@ exports.getGroupMessages = async (req, res) => {
 
         const messages = await GroupMessage.findAll({
             where: { groupId },
+            attributes:["id","message","userId"],
             include: [
                 {
                     model: User,
-                    attributes: ["name"], // Fetch user name
+                    attributes: ["id","name"], // Fetch userId and  name
                 },
             ],
-        });
 
+        });
         const formattedMessages = messages.map(msg => ({
             id: msg.id,
             message: msg.message,
+            senderId:msg.userId,
             senderName: msg.User ? msg.User.name : "Unknown", // Ensure senderName is not undefined
         }));
-
         res.status(200).json(formattedMessages);
     } catch (error) {
         console.error("Error fetching messages:", error);
@@ -91,7 +92,35 @@ exports.getGroupMessages = async (req, res) => {
 // Get all groups the user created or joined
 exports.getUserGroups = async (req, res) => {
     try {
-        const userId = req.user.id;
+        const userId = req.user.id;exports.getGroupMessages = async (req, res) => {
+    try {
+        const { groupId } = req.params;
+
+        const messages = await GroupMessage.findAll({
+            where: { groupId,userId},
+            attributes:["id","message","userId"],
+            include: [
+                {
+                    model: User,
+                    attributes: ["name"], // Fetch user name
+                },
+            ],
+        });
+
+        const formattedMessages = messages.map(msg => ({
+            id: msg.id,
+            message: msg.message,
+            senderId:msg.userId,
+            senderName: msg.User ? msg.User.name : "Unknown", // Ensure senderName is not undefined
+        }));
+
+        res.status(200).json(formattedMessages);
+    } catch (error) {
+        console.error("Error fetching messages:", error);
+        res.status(500).json({ error: "Failed to load messages" });
+    }
+
+};
         
         if (!userId) {
             return res.status(400).json({ error: "User ID is required" });
@@ -159,3 +188,26 @@ exports.inviteUserToGroup = async (req, res) => {
         res.status(500).json({ error: "Failed to invite user" });
     }
 };
+// Get all members of a specific group
+exports.getGroupMembers = async (req, res) => {
+    try {
+        const { groupId } = req.params;
+
+        // Find all members of the group and fetch their names
+        const members = await GroupMember.findAll({
+            where: { groupId },
+            include: [{ model: User, attributes: ["id", "name"] }],
+        });
+
+        const formattedMembers = members.map(member => ({
+            id: member.User.id,
+            name: member.User.name,
+        }));
+
+        res.status(200).json(formattedMembers);
+    } catch (error) {
+        console.error("Error fetching group members:", error);
+        res.status(500).json({ error: "Failed to fetch group members" });
+    }
+};
+

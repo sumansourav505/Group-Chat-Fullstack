@@ -70,7 +70,7 @@ exports.login = async (req, res) => {
         res.status(200).json({
             message: 'Login successful',
             token,
-            userId: user.id, // ✅ Send userId to frontend
+            userId: user.id, // Send userId to frontend
             name: user.name,
         });
     } catch (error) {
