@@ -87,33 +87,33 @@ async function selectGroup(groupId, groupName) {
 }
 
 // Show Group Info
-async function showGroupInfo(groupId) {
-    try {
-        const response = await axios.get(`${baseURL}/group/info/${groupId}`, {
-            headers: { Authorization: `Bearer ${token}` },
-        });
+// async function showGroupInfo(groupId) {
+//     try {
+//         const response = await axios.get(`${baseURL}/group/info/${groupId}`, {
+//             headers: { Authorization: `Bearer ${token}` },
+//         });
 
-        const group = response.data;
-        const groupInfoSidebar = document.getElementById("groupInfoSidebar");
+//         const group = response.data;
+//         const groupInfoSidebar = document.getElementById("groupInfoSidebar");
 
-        if (groupInfoSidebar) {
-            groupInfoSidebar.innerHTML = `
-                <h3>${group.name}</h3>
-                <p><strong>Created By:</strong> ${group.createdBy}</p>
-                <p><strong>Members (${group.members.length}):</strong></p>
-                <ul>
-                    ${group.members.map(member => `<li>${member.name}</li>`).join("")}
-                </ul>
-            `;
+//         if (groupInfoSidebar) {
+//             groupInfoSidebar.innerHTML = `
+//                 <h3>${group.name}</h3>
+//                 <p><strong>Created By:</strong> ${group.createdBy}</p>
+//                 <p><strong>Members (${group.members.length}):</strong></p>
+//                 <ul>
+//                     ${group.members.map(member => `<li>${member.name}</li>`).join("")}
+//                 </ul>
+//             `;
 
-            // Show the sidebar and adjust chatbox width
-            groupInfoSidebar.classList.add("open");
-            document.querySelector(".chatbox").classList.add("shrink");
-        }
-    } catch (error) {
-        console.error("Error loading group info:", error);
-    }
-}
+//             // Show the sidebar and adjust chatbox width
+//             groupInfoSidebar.classList.add("open");
+//             document.querySelector(".chatbox").classList.add("shrink");
+//         }
+//     } catch (error) {
+//         console.error("Error loading group info:", error);
+//     }
+// }
 
 // Create a new group
 async function createGroup() {
@@ -209,5 +209,36 @@ async function loadGroupMessages(groupId) {
         scrollToBottom();
     } catch (error) {
         console.error("Error loading messages:", error);
+    }
+}
+async function showGroupInfo(groupId) {
+    try {
+        const response = await axios.get(`${baseURL}/group/info/${groupId}`, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+
+        const group = response.data;
+        const groupInfoSidebar = document.getElementById("groupInfoSidebar");
+        console.log(group.members.isAdmin);
+
+        if (groupInfoSidebar) {
+            groupInfoSidebar.innerHTML = `
+                <h3>${group.name}</h3>
+                <p><strong>Members (${group.members.length}):</strong></p>
+                <ul>
+                    ${group.members
+                        .map(member => 
+                            `<li>${member.name} ${member.isAdmin ? "<span style='color: red;'>(Admin)</span>" : ""}</li>`
+                        ).join("")
+                    }
+                </ul>
+            `;
+
+            // Show the sidebar and adjust chatbox width
+            groupInfoSidebar.classList.add("open");
+            document.querySelector(".chatbox").classList.add("shrink");
+        }
+    } catch (error) {
+        console.error("Error loading group info:", error);
     }
 }

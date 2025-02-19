@@ -189,21 +189,53 @@ exports.inviteUserToGroup = async (req, res) => {
     }
 };
 // Get all members of a specific group
+// exports.getGroupInfo = async (req, res) => {
+//     try {
+//         const { groupId } = req.params;
+
+//         console.log("Fetching group info for groupId:", groupId);
+
+//         if (!groupId) {
+//             return res.status(400).json({ error: "Group ID is required" });
+//         }
+
+//         const group = await Group.findByPk(groupId, {
+//             include: [
+//                 {
+//                     model: User,
+//                     as: "members",
+//                     attributes: ["id", "name"],
+//                     through: { attributes: [] },
+//                 },
+//             ],
+//         });
+
+//         if (!group) {
+//             console.log(`Group with ID ${groupId} not found.`);
+//             return res.status(404).json({ error: "Group not found" });
+//         }
+
+//         res.status(200).json({
+//             id: group.id,
+//             name: group.name,
+//             createdBy: group.createdBy,
+//             members: group.members, 
+//         });
+//     } catch (error) {
+//         console.error("Error fetching group info:", error);
+//         res.status(500).json({ error: "Failed to load group info" });
+//     }
+// };
+//
 exports.getGroupInfo = async (req, res) => {
     try {
         const { groupId } = req.params;
-
-        console.log("Fetching group info for groupId:", groupId);
-
-        if (!groupId) {
-            return res.status(400).json({ error: "Group ID is required" });
-        }
 
         const group = await Group.findByPk(groupId, {
             include: [
                 {
                     model: User,
-                    as: "members",
+                    as: "members", // Use the alias defined in associations
                     attributes: ["id", "name"],
                     through: { attributes: [] },
                 },
@@ -211,18 +243,24 @@ exports.getGroupInfo = async (req, res) => {
         });
 
         if (!group) {
-            console.log(`Group with ID ${groupId} not found.`);
             return res.status(404).json({ error: "Group not found" });
         }
+
+        // Mark admin in the members list
+        const membersWithAdminTag = group.members.map(user => ({
+            id: user.id,
+            name: user.name,
+            isAdmin: user.id === group.createdBy ? "Admin" : "",
+        }));
 
         res.status(200).json({
             id: group.id,
             name: group.name,
-            createdBy: group.createdBy,
-            members: group.members, 
+            members: membersWithAdminTag,
         });
     } catch (error) {
         console.error("Error fetching group info:", error);
         res.status(500).json({ error: "Failed to load group info" });
     }
 };
+
