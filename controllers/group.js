@@ -189,25 +189,40 @@ exports.inviteUserToGroup = async (req, res) => {
     }
 };
 // Get all members of a specific group
-exports.getGroupMembers = async (req, res) => {
+exports.getGroupInfo = async (req, res) => {
     try {
         const { groupId } = req.params;
 
-        // Find all members of the group and fetch their names
-        const members = await GroupMember.findAll({
-            where: { groupId },
-            include: [{ model: User, attributes: ["id", "name"] }],
+        console.log("Fetching group info for groupId:", groupId);
+
+        if (!groupId) {
+            return res.status(400).json({ error: "Group ID is required" });
+        }
+
+        const group = await Group.findByPk(groupId, {
+            include: [
+                {
+                    model: User,
+                    as: "members",
+                    attributes: ["id", "name"],
+                    through: { attributes: [] },
+                },
+            ],
         });
 
-        const formattedMembers = members.map(member => ({
-            id: member.User.id,
-            name: member.User.name,
-        }));
+        if (!group) {
+            console.log(`Group with ID ${groupId} not found.`);
+            return res.status(404).json({ error: "Group not found" });
+        }
 
-        res.status(200).json(formattedMembers);
+        res.status(200).json({
+            id: group.id,
+            name: group.name,
+            createdBy: group.createdBy,
+            members: group.members, 
+        });
     } catch (error) {
-        console.error("Error fetching group members:", error);
-        res.status(500).json({ error: "Failed to fetch group members" });
+        console.error("Error fetching group info:", error);
+        res.status(500).json({ error: "Failed to load group info" });
     }
 };
-

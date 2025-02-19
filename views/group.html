@@ -8,13 +8,20 @@
 </head>
 <body>
     <div class="container">
+        <!-- Sidebar with groups -->
         <div class="sidebar">
             <h2>Your Groups</h2>
             <ul id="groupList"></ul>
             <button onclick="createGroup()">Create Group</button>
         </div>
+
+        <!-- Chatbox -->
         <div class="chatbox">
-            <h2 id="groupTitle">Select a Group</h2>
+            <div class="chat-header">
+                <h2 id="groupTitle">Select a Group</h2>
+                <button class="info-btn" onclick="toggleGroupInfo()">ℹ️ Info</button>
+            </div>
+
             <div id="messages"></div>
             <input type="text" id="messageInput" placeholder="Type a message...">
             <button onclick="sendMessage()">Send</button>
@@ -25,8 +32,10 @@
                 <button onclick="inviteUser()">Invite User</button>
             </div>
         </div>
-        <div id="groupInfoSidebar" class="group-info hidden">
-            <h3>Group Members</h3>
+
+        <!-- Group Info Sidebar (Initially Hidden) -->
+        <div class="group-info-sidebar" id="groupInfoSidebar">
+            <h3>Group Info</h3>
             <ul id="groupMembersList"></ul>
         </div>
     </div>

@@ -69,6 +69,10 @@ button:hover {
     justify-content: space-between;
     padding: 20px;
     background-color: #ecf0f1;
+    transition: width 0.3s ease-in-out;
+}
+.chatbox.shrink {
+    width: calc(100% - 300px); /* Adjust width dynamically when sidebar opens */
 }
 
 /* Chat messages section */
@@ -83,6 +87,7 @@ button:hover {
     display: flex;
     flex-direction: column;
     gap: 8px; /* Space between messages */
+    max-height: 60vh;
 }
 
 /* General message styling */
@@ -127,4 +132,65 @@ button:hover {
 .chatbox button {
     width: 15%;
     margin-left: 5px;
+}
+
+/* Group Info Sidebar */
+.group-info-sidebar {
+    width: 300px; /* Wider sidebar */
+    background: linear-gradient(to bottom, #34495e, #2c3e50);
+    color: white;
+    padding: 20px;
+    position: fixed;
+    right: 0;
+    top: 0;
+    height: 100%;
+    box-shadow: -4px 0 10px rgba(0, 0, 0, 0.2);
+    display: none; /* Initially hidden */
+    transition: all 0.3s ease-in-out;
+}
+
+.group-info-sidebar h3 {
+    text-align: center;
+    margin-bottom: 15px;
+    font-size: 22px;
+}
+
+.group-info-sidebar ul {
+    list-style: none;
+    padding: 0;
+}
+
+.group-info-sidebar li {
+    padding: 10px;
+    background-color: rgba(255, 255, 255, 0.1);
+    margin: 5px 0;
+    border-radius: 5px;
+    text-align: center;
+}
+
+/* Sidebar styling */
+#groupMembersSidebar {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 250px;
+    height: 100%;
+    background-color: #f4f4f4;
+    padding: 15px;
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2);
+    overflow-y: auto;
+    transition: transform 0.3s ease-in-out;
+    transform: translateX(100%); /* Initially hidden */
+}
+
+#groupMembersSidebar.visible {
+    transform: translateX(0); /* Show sidebar when toggled */
+}
+
+.hidden {
+    display: none;
+}
+.member-item {
+    padding: 8px;
+    border-bottom: 1px solid #ddd;
 }

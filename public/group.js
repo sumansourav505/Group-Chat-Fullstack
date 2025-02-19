@@ -1,19 +1,49 @@
-document.addEventListener("DOMContentLoaded", () => {
-    console.log("Page Loaded. Fetching user groups...");
-    loadUserGroups();
-});
-
-
 const baseURL = "http://localhost:4000";
 const token = localStorage.getItem("token");
 const userId = Number(localStorage.getItem("userId"));
+
+document.addEventListener("DOMContentLoaded", () => {
+    console.log("Page Loaded. Fetching user groups...");
+    loadUserGroups();
+
+    const groupInfoSidebar = document.getElementById("groupInfoSidebar");
+    const info_Btn = document.getElementById("info-btn");
+    // Initially hide the info button and sidebar
+    if (info_Btn) info_Btn.style.display = "none";
+    if (groupInfoSidebar) groupInfoSidebar.style.display = "none";
+
+    if (info_Btn) {
+        info_Btn.addEventListener("click", () => {
+            if (!selectedGroupId) {
+                alert("Please select a group first.");
+                return;
+            }
+            toggleGroupInfo();
+        });
+    }
+});
 
 let selectedGroupId = null; // Stores the selected group ID
 
 const groupList = document.getElementById("groupList");
 const messageInput = document.getElementById("messageInput");
 const messagesContainer = document.getElementById("messages");
-const groupInfoContainer = document.getElementById("groupInfo");
+const groupMembersList = document.getElementById("groupMembersList");
+
+// Toggle Group Info Sidebar
+async function toggleGroupInfo() {
+    if (!selectedGroupId) {
+        console.error("No group selected.");
+        return;
+    }
+
+    const groupInfoSidebar = document.getElementById("groupInfoSidebar");
+    if (groupInfoSidebar) {
+        groupInfoSidebar.style.display = groupInfoSidebar.style.display === "none" ? "block" : "none";
+    }
+
+    await showGroupInfo(selectedGroupId);
+}
 
 // Load user groups
 async function loadUserGroups() {
@@ -26,13 +56,13 @@ async function loadUserGroups() {
         const response = await axios.get(`${baseURL}/group/user-groups`, {
             headers: { Authorization: `Bearer ${token}` }
         });
-        
+
         groupList.innerHTML = ""; // Clear existing groups
 
         response.data.forEach(group => {
             const li = document.createElement("li");
             li.textContent = group.name;
-            li.addEventListener("click", () => selectGroup(group.id, group.name)); // Set selected group
+            li.addEventListener("click", () => selectGroup(group.id, group.name));
             groupList.appendChild(li);
         });
 
@@ -46,30 +76,44 @@ async function selectGroup(groupId, groupName) {
     selectedGroupId = groupId;
     document.getElementById("groupTitle").textContent = groupName;
     messagesContainer.innerHTML = ""; // Clear previous messages
+
+    const info_Btn = document.getElementById("info-btn");
+    if (info_Btn) info_Btn.style.display = "inline-block"; // Show info button
+
+    const groupInfoSidebar = document.getElementById("groupInfoSidebar");
+    if (groupInfoSidebar) groupInfoSidebar.style.display = "none"; // Hide sidebar when switching groups
+
     await loadGroupMessages(groupId);
-    //await loadGroupMembers(groupId);
-    await showGroupInfo(groupId);
 }
-//showGroupInfo
+
+// Show Group Info
 async function showGroupInfo(groupId) {
     try {
         const response = await axios.get(`${baseURL}/group/info/${groupId}`, {
-            headers: { Authorization: `Bearer ${token}` }
+            headers: { Authorization: `Bearer ${token}` },
         });
 
         const group = response.data;
+        const groupInfoSidebar = document.getElementById("groupInfoSidebar");
 
-        groupInfoContainer.innerHTML = `
-            <h3>${group.name}</h3>
-            <p><strong>Members:</strong> ${group.members.length}</p>
-            <p><strong>Created By:</strong> ${group.createdBy}</p>
-        `;
+        if (groupInfoSidebar) {
+            groupInfoSidebar.innerHTML = `
+                <h3>${group.name}</h3>
+                <p><strong>Created By:</strong> ${group.createdBy}</p>
+                <p><strong>Members (${group.members.length}):</strong></p>
+                <ul>
+                    ${group.members.map(member => `<li>${member.name}</li>`).join("")}
+                </ul>
+            `;
 
+            // Show the sidebar and adjust chatbox width
+            groupInfoSidebar.classList.add("open");
+            document.querySelector(".chatbox").classList.add("shrink");
+        }
     } catch (error) {
         console.error("Error loading group info:", error);
     }
 }
-
 
 // Create a new group
 async function createGroup() {
@@ -128,20 +172,22 @@ async function sendMessage() {
     }
 
     try {
-        const response = await axios.post(`${baseURL}/group/send-message`, 
+        await axios.post(`${baseURL}/group/send-message`, 
             { message: message, groupId: selectedGroupId }, 
             { headers: { Authorization: `Bearer ${token}` } }
         );
-        console.log(response.data);
-    
+
         messageInput.value = ""; // Clear input field
-        const chatMessage = response.data.chatMessage;
-    
         await loadGroupMessages(selectedGroupId); // Refresh messages
     } catch (error) {
         console.error("Error sending message:", error);
-        alert(error.response?.data?.error || "Failed to send message");
     }
+}
+
+// Auto-scroll to bottom
+function scrollToBottom() {
+    const messagesContainer = document.getElementById("messages");
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
 }
 
 // Load messages for a group
@@ -155,53 +201,13 @@ async function loadGroupMessages(groupId) {
 
         response.data.forEach(msg => {
             const messageElement = document.createElement("div");
-            messageElement.classList.add("message");
-
-            const isSent = msg.senderId === userId;
-            messageElement.classList.add(isSent ? "sent" : "received");
-
-            // **Create sender name (bold)**
-            const senderElement = document.createElement("strong");
-            senderElement.textContent = `${msg.senderName}:`;
-
-            // **Create message text (normal text)**
-            const messageText = document.createElement("span");
-            messageText.innerHTML = `<br>${msg.message}`; // Line break between name & message
-
-            // Append sender name and message
-            messageElement.appendChild(senderElement);
-            messageElement.appendChild(messageText);
-
+            messageElement.classList.add("message", msg.senderId === userId ? "sent" : "received");
+            messageElement.innerHTML = `<strong>${msg.senderName}:</strong> ${msg.message}`;
             messagesContainer.appendChild(messageElement);
         });
 
-        // **Scroll to bottom automatically**
-        messagesContainer.scrollTop = messagesContainer.scrollHeight;
-
+        scrollToBottom();
     } catch (error) {
         console.error("Error loading messages:", error);
-    }
-}
-
-
-
-
-async function loadGroupMembers(groupId) {
-    try {
-        const response = await axios.get(`${baseURL}/group/members/${groupId}`, {
-            headers: { Authorization: `Bearer ${token}` }
-        });
-
-        const membersContainer = document.getElementById("groupMembers");
-        membersContainer.innerHTML = ""; // Clear existing members
-
-        response.data.forEach(member => {
-            const memberElement = document.createElement("p");
-            memberElement.textContent = member.name;
-            membersContainer.appendChild(memberElement);
-        });
-
-    } catch (error) {
-        console.error("Error loading group members:", error);
     }
 }
