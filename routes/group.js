@@ -18,6 +18,8 @@ router.get('/messages/:groupId', authenticateController.authenticate, groupContr
 
 // Get all members of a group
 router.get("/info/:groupId", authenticateController.authenticate, groupController.getGroupInfo);
+//search group member by name,email,number
+router.get("/search-users", authenticateController.authenticate, groupController.searchUsers);
 
 
 module.exports = router;

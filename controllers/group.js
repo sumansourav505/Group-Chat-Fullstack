@@ -232,6 +232,7 @@ exports.getGroupInfo = async (req, res) => {
         const { groupId } = req.params;
 
         const group = await Group.findByPk(groupId, {
+            attribute:["id","name","createdBy"],
             include: [
                 {
                     model: User,
@@ -250,17 +251,44 @@ exports.getGroupInfo = async (req, res) => {
         const membersWithAdminTag = group.members.map(user => ({
             id: user.id,
             name: user.name,
-            isAdmin: user.id === group.createdBy ? "Admin" : "",
+            isAdmin: user.id === group.createdBy,
         }));
 
         res.status(200).json({
             id: group.id,
             name: group.name,
+            createdBy:group.createdBy,
             members: membersWithAdminTag,
         });
     } catch (error) {
         console.error("Error fetching group info:", error);
         res.status(500).json({ error: "Failed to load group info" });
+    }
+};
+
+exports.searchUsers = async (req, res) => {
+    try {
+        const { query } = req.query;
+
+        if (!query) {
+            return res.status(400).json({ error: "Search query is required" });
+        }
+
+        // Perform case-insensitive search for users
+        const users = await User.findAll({
+            where: {
+                [Op.or]: [
+                    { name: { [Op.iLike]: `%${query}%` } },
+                    { email: { [Op.iLike]: `%${query}%` } },
+                    { phoneNumber: { [Op.iLike]: `%${query}%` } }
+                ]
+            }
+        });
+
+        res.status(200).json(users);
+    } catch (error) {
+        console.error("Error searching users:", error);
+        res.status(500).json({ error: "Server error" });
     }
 };
 

@@ -86,35 +86,6 @@ async function selectGroup(groupId, groupName) {
     await loadGroupMessages(groupId);
 }
 
-// Show Group Info
-// async function showGroupInfo(groupId) {
-//     try {
-//         const response = await axios.get(`${baseURL}/group/info/${groupId}`, {
-//             headers: { Authorization: `Bearer ${token}` },
-//         });
-
-//         const group = response.data;
-//         const groupInfoSidebar = document.getElementById("groupInfoSidebar");
-
-//         if (groupInfoSidebar) {
-//             groupInfoSidebar.innerHTML = `
-//                 <h3>${group.name}</h3>
-//                 <p><strong>Created By:</strong> ${group.createdBy}</p>
-//                 <p><strong>Members (${group.members.length}):</strong></p>
-//                 <ul>
-//                     ${group.members.map(member => `<li>${member.name}</li>`).join("")}
-//                 </ul>
-//             `;
-
-//             // Show the sidebar and adjust chatbox width
-//             groupInfoSidebar.classList.add("open");
-//             document.querySelector(".chatbox").classList.add("shrink");
-//         }
-//     } catch (error) {
-//         console.error("Error loading group info:", error);
-//     }
-// }
-
 // Create a new group
 async function createGroup() {
     const groupName = prompt("Enter Group Name:");
@@ -211,6 +182,7 @@ async function loadGroupMessages(groupId) {
         console.error("Error loading messages:", error);
     }
 }
+// Show Group Info
 async function showGroupInfo(groupId) {
     try {
         const response = await axios.get(`${baseURL}/group/info/${groupId}`, {
@@ -219,26 +191,107 @@ async function showGroupInfo(groupId) {
 
         const group = response.data;
         const groupInfoSidebar = document.getElementById("groupInfoSidebar");
-        console.log(group.members.isAdmin);
 
         if (groupInfoSidebar) {
+            document.body.dataset.isAdmin=group.createdBy==userId?"true":"false";
+
             groupInfoSidebar.innerHTML = `
                 <h3>${group.name}</h3>
+                <input type="text" placeholder="Search..member.." id="search-input"></input>
+                <button id="search-btn">Search</button>
                 <p><strong>Members (${group.members.length}):</strong></p>
-                <ul>
-                    ${group.members
-                        .map(member => 
-                            `<li>${member.name} ${member.isAdmin ? "<span style='color: red;'>(Admin)</span>" : ""}</li>`
-                        ).join("")
-                    }
+                <ul id="memberList">
+                    ${group.members.map(member => `
+                         <li data-member-id="${member.id}" data-user-id="${member.id}" data-is-admin="${member.isAdmin}">
+                            ${member.name} ${member.isAdmin ? "<span style='color: yellow;'>(Admin)</span>" : ""}
+                        </li>`).join("")}
                 </ul>
             `;
 
             // Show the sidebar and adjust chatbox width
             groupInfoSidebar.classList.add("open");
             document.querySelector(".chatbox").classList.add("shrink");
+            //eventlistener for searching
+            document.getElementById("search-btn").addEventListener("click", searchGroupMember);
+            document.getElementById("search-input").addEventListener("keyup", searchGroupMember);
+            document.querySelectorAll("#groupInfoSidebar ul li").forEach(memberItem => {
+                memberItem.addEventListener("click", function () {
+                    toggleAdminOptions(memberItem);
+                });
+            });
         }
     } catch (error) {
         console.error("Error loading group info:", error);
+    }
+}
+function searchGroupMember(){
+    const searchInput=document.getElementById('search-input').value.toLowerCase();
+    const membersList=document.querySelectorAll('#groupInfoSidebar ul li');
+
+    membersList.forEach(member=>{
+        const name=member.textContent.toLowerCase();
+        if(name.includes(searchInput)){
+            member.style.display="block";
+        }else{
+            member.style.display="none";
+        }
+
+    });
+}
+function toggleAdminOptions(member) {
+    const isCurrentUserAdmin=document.body.dataset.isAdmin==="true";
+    if(!isCurrentUserAdmin){
+        return;
+    }
+
+    let buttonsContainer = member.querySelector(".admin-buttons");
+    if (buttonsContainer) {
+        buttonsContainer.remove();
+        return;
+    }
+    if(member.dataset.isAdmin==="true"){
+        return;
+    }
+    
+    buttonsContainer = document.createElement("div");
+    buttonsContainer.className = "admin-buttons";
+    
+    const makeAdminBtn = document.createElement("button");
+    makeAdminBtn.textContent = "Make Admin";
+    makeAdminBtn.addEventListener("click", () => makeAdmin(member.dataset.userId));
+    
+    const removeBtn = document.createElement("button");
+    removeBtn.textContent = "Remove";
+    console.log(member.dataset.userId);
+    removeBtn.addEventListener("click", () => removeMember(member.dataset.userId));
+    
+    buttonsContainer.appendChild(makeAdminBtn);
+    buttonsContainer.appendChild(removeBtn);
+    
+    member.appendChild(buttonsContainer);
+}
+
+async function makeAdmin(userId) {
+    try {
+        await axios.put(`${baseURL}/admin/make-admin`, { groupId: selectedGroupId, userId }, {
+            headers: { Authorization: `Bearer ${token}` }
+        });
+        alert("User promoted to admin");
+        showGroupInfo(selectedGroupId);
+    } catch (error) {
+        console.error("Error making user admin:", error);
+    }
+}
+async function removeMember(userId) {
+    console.log(userId);
+    try {
+        await axios.delete(`${baseURL}/admin/remove-member`, {
+            headers: { Authorization: `Bearer ${token}` },
+            data: { groupId: selectedGroupId, userId }
+        });
+        alert("User removed from group");
+        showGroupInfo(selectedGroupId);
+    } catch (error) {
+        console.error("Error removing user:", error);
     }
 }

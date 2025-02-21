@@ -12,6 +12,7 @@ const GroupMessage=require('./models/groupMessage')
 const userRoutes = require('./routes/user');
 const chatRoutes = require('./routes/chat');
 const groupRoutes = require('./routes/group');
+const adminRoutes = require("./routes/admin");
 
 const app = express();
 
@@ -30,6 +31,7 @@ app.get('/group', (req, res) => res.sendFile(path.join(__dirname, 'views', 'grou
 app.use('/user', userRoutes);
 //app.use('/chat', chatRoutes);
 app.use('/group', groupRoutes);
+app.use("/admin", adminRoutes);
 
 // **Define associations properly**
 // User.hasMany(Chat, { foreignKey: 'userId', onDelete: 'CASCADE' });

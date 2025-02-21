@@ -2,13 +2,13 @@
 const express = require("express");
 const adminController = require("../controllers/admin");
 const router = express.Router();
-const authenticate = require("../middleware/auth");
+const authenticateController = require("../middleware/auth");
 
 // Admin functionalities
-router.post("/invite", authenticate, adminController.inviteUser);
-router.post("/make-admin", authenticate, adminController.makeAdmin);
-router.post("/remove-user", authenticate, adminController.removeUser);
-router.get("/group-members/:groupId", authenticate, adminController.getGroupMembers);
+//router.post("/invite", authenticateController.authenticate, adminController.inviteUser);
+router.put("/make-admin", authenticateController.authenticate, adminController.makeAdmin);
+router.delete("/remove-member", authenticateController.authenticate, adminController.removeMember);
+//router.get("/group-members/:groupId", authenticateController.authenticate, adminController.getGroupMembers);
 
 module.exports = router;
 
