@@ -4,7 +4,7 @@ const GroupMember = require('../models/groupMember');
 
 //make admin
 exports.makeAdmin = async (req, res) => {
-    const { groupId, memberId } = req.body;
+    const { groupId, userId } = req.body;
 
     try {
         const group = await Group.findByPk(groupId);
@@ -13,7 +13,7 @@ exports.makeAdmin = async (req, res) => {
         }
 
         // Update the createdBy column to the new admin (memberId)
-        await Group.update({ createdBy: memberId }, { where: { id: groupId } });
+        await Group.update({ createdBy: userId }, { where: { id: groupId } });
 
         res.json({ message: "Member is now an admin!" });
     } catch (error) {
