@@ -18,9 +18,10 @@ loginForm.addEventListener('submit', async function(event) {
         const response = await axios.post(`${baseURL}/user/login`, loginData);
 
         if (response.status === 200) {
-            const { token, userId } = response.data; // Ensure backend returns userId
+            const { token, userId,name } = response.data; // Ensure backend returns userId
             localStorage.setItem('token', token);
             localStorage.setItem('userId', userId.toString()); // Store userId correctly
+            localStorage.setItem('userName', name); // Store userId correctly
 
             console.log("Stored userId in localStorage:", userId); // Debugging
 

@@ -31,7 +31,7 @@ exports.createGroup = async (req, res) => {
 exports.sendMessage = async (req, res) => {
     try {
         const { message, groupId } = req.body;
-        const userId = req.user.id; // Ensure user is extracted from the authenticated request
+        const userId = req.user.id; // Ensure user is extracted from the authenticated requests
 
         if (!message || !groupId) {
             return res.status(400).json({ error: "Message and groupId are required." });
@@ -46,13 +46,16 @@ exports.sendMessage = async (req, res) => {
         // Fetch the sender's name for the response
         const sender = await User.findByPk(userId, { attributes: ["id", "name"] });
 
-        res.status(201).json({
-            chatMessage: {
-                id: newMessage.id,
-                message: newMessage.message,
-                senderName: sender ? sender.name : "Unknown"
-            }
-        });
+        const chatMessage = {
+            id: newMessage.id,
+            message: newMessage.message,
+            senderId: sender.id,
+            senderName: sender.name
+        };
+        //emit by web socket
+        req.app.io.to(`group_${groupId}`).emit("newMessage", chatMessage);
+
+        res.status(201).json({chatMessage});
     } catch (error) {
         console.error("Error sending message:", error);
         res.status(500).json({ error: "Failed to send message." });

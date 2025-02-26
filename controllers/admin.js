@@ -11,7 +11,7 @@ exports.makeAdmin = async (req, res) => {
         if (!group) {
             return res.status(404).json({ error: "Group not found" });
         }
-
+        
         // Update the createdBy column to the new admin (memberId)
         await Group.update({ createdBy: userId }, { where: { id: groupId } });
 
@@ -31,7 +31,6 @@ exports.removeMember = async (req, res) => {
             return res.status(404).json({ error: "Member not found in group" });
         }
 
-        // Remove member from the group
         await GroupMember.destroy({ where: { groupId, userId } });
 
         res.json({ message: "Member removed from group!" });

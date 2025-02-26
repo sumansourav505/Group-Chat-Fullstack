@@ -8,14 +8,12 @@
 </head>
 <body>
     <div class="container">
-        <!-- Sidebar with groups -->
         <div class="sidebar">
             <h2>Your Groups</h2>
             <ul id="groupList"></ul>
             <button onclick="createGroup()">Create Group</button>
         </div>
 
-        <!-- Chatbox -->
         <div class="chatbox">
             <div class="chat-header">
                 <h2 id="groupTitle">Select a Group</h2>
@@ -26,20 +24,18 @@
             <input type="text" id="messageInput" placeholder="Type a message...">
             <button onclick="sendMessage()">Send</button>
 
-            <!-- Invite User Section -->
             <div class="invite-section">
                 <input type="text" id="inviteUserId" placeholder="Enter User ID to Invite">
                 <button onclick="inviteUser()">Invite User</button>
             </div>
         </div>
 
-        <!-- Group Info Sidebar (Initially Hidden) -->
         <div class="group-info-sidebar" id="groupInfoSidebar">
             <h3>Group Info</h3>
             <ul id="groupMembersList"></ul>
         </div>
     </div>
-
+    <script src="/socket.io/socket.io.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="group.js"></script>
 </body>
