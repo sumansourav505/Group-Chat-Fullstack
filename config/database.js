@@ -1,5 +1,5 @@
 const Sequelize=require('sequelize');
-const sequelize=new Sequelize(process.env.DB_NAME,'root',process.env.DB_PW,{
+const sequelize=new Sequelize('group-chat-app','root','Chintu5050@',{
     host:'localhost',
     dialect:'mysql'
 });
