@@ -10,7 +10,7 @@ const authenticate = async (req, res, next) => {
         }
         
 
-        const decoded = jwt.verify(token,'secrete');//2)decode the token
+        const decoded = jwt.verify(token,process.env.JWT_SECRET);//2)decode the token
 
         // Ensure decoded token has a valid userId
         if (!decoded || !decoded.userId) {

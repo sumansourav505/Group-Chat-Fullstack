@@ -21,11 +21,15 @@
             </div>
 
             <div id="messages"></div>
-            <input type="text" id="messageInput" placeholder="Type a message...">
-            <button onclick="sendMessage()">Send</button>
-            <input type="file" id="fileInput">
-            <button onclick="uploadFile()">Upload</button>
 
+            <!-- WhatsApp-style Input Box -->
+            <div class="chat-input-container">
+                <input type="file" id="fileInput" hidden>
+                <input type="text" id="messageInput" placeholder="Type a message...">
+                <label for="fileInput" class="file-upload">🔗</label>
+                <button onclick="uploadFile()" id="upload-btn" style="display: none;">⬆️</button>
+                <button onclick="sendMessage()" id="send-btn">➤</button>
+            </div>
 
             <div class="invite-section">
                 <input type="text" id="inviteUserId" placeholder="Enter User ID to Invite">
@@ -38,6 +42,7 @@
             <ul id="groupMembersList"></ul>
         </div>
     </div>
+
     <script src="/socket.io/socket.io.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="group.js"></script>

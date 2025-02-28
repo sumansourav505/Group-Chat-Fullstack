@@ -125,18 +125,66 @@ button:hover {
     margin-right: 5px;
 }
 
-/* Message input field */
-#messageInput {
-    width: 80%;
+/* WhatsApp-style message input field and buttons */
+.chat-input-container {
+    display: flex;
+    align-items: center;
+    background: white;
     padding: 10px;
+    border-radius: 25px;
     border: 1px solid #bdc3c7;
-    border-radius: 5px;
+    gap: 10px;
 }
 
-/* Send button next to the input */
-.chatbox button {
-    width: 15%;
-    margin-left: 5px;
+#messageInput {
+    flex-grow: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 25px;
+    outline: none;
+    font-size: 16px;
+}
+
+.file-upload {
+    font-size: 20px;
+    cursor: pointer;
+    padding: 5px;
+    color: #007bff;
+}
+
+#fileInput {
+    display: none;
+}
+
+#sendButton {
+    padding: 10px 15px;
+    border-radius: 50%;
+    background: #1abc9c;
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#sendButton:hover {
+    background: #16a085;
+}
+
+/* Upload button should appear only after a file is selected */
+#uploadButton {
+    display: none;
+    padding: 10px;
+    background: #007bff;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+#uploadButton:hover {
+    background: #0056b3;
 }
 
 /* Group Info Sidebar */
@@ -153,18 +201,15 @@ button:hover {
     display: none; /* Initially hidden */
     transition: all 0.3s ease-in-out;
 }
-
 .group-info-sidebar h3 {
     text-align: center;
     margin-bottom: 15px;
     font-size: 22px;
 }
-
 .group-info-sidebar ul {
     list-style: none;
     padding: 0;
 }
-
 .group-info-sidebar li {
     padding: 10px;
     background-color: rgba(255, 255, 255, 0.1);
@@ -178,9 +223,6 @@ button:hover {
     color: black;
 
 }
-
-
-/* Sidebar styling */
 #groupMembersSidebar {
     position: absolute;
     top: 0;
@@ -194,7 +236,6 @@ button:hover {
     transition: transform 0.3s ease-in-out;
     transform: translateX(100%); /* Initially hidden */
 }
-
 #groupMembersSidebar.visible {
     transform: translateX(0); /* Show sidebar when toggled */
 }
@@ -202,8 +243,6 @@ button:hover {
 .hidden {
     display: none;
 }
-
-/* Member Item Styling */
 .member-item {
     padding: 8px;
     border-bottom: 1px solid #ddd;
@@ -276,13 +315,4 @@ button:hover {
     #groupMembersSidebar {
         width: 100%;
     }
-}
-.admin-buttons {
-    margin-top: 5px;
-    display: flex;
-    gap: 5px;
-}
-.admin-buttons button {
-    padding: 3px 6px;
-    cursor: pointer;
 }

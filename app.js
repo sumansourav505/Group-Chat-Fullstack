@@ -2,8 +2,8 @@
 const express = require("express");
 const path = require("path");
 require("dotenv").config();
-const http = require("http"); // Required for socket.io
-const { Server } = require("socket.io"); // Import Socket.io
+const http = require("http"); 
+const { Server } = require("socket.io");
 const sequelize = require("./config/database");
 
 const User = require("./models/user");
@@ -14,6 +14,7 @@ const GroupMessage = require("./models/groupMessage");
 const userRoutes = require("./routes/user");
 const groupRoutes = require("./routes/group");
 const adminRoutes = require("./routes/admin");
+const uploadeRoutes=require("./routes/upload");
 
 const app = express();
 const server = http.createServer(app); 
@@ -39,6 +40,7 @@ app.get("/group", (req, res) => res.sendFile(path.join(__dirname, "views", "grou
 app.use("/user", userRoutes);
 app.use("/group", groupRoutes);
 app.use("/admin", adminRoutes);
+app.use("/api",uploadeRoutes);
 
 //Associations
 User.hasMany(Group, { foreignKey: "createdBy", as: "ownedGroups", onDelete: "CASCADE" });

@@ -24,6 +24,10 @@ document.addEventListener("DOMContentLoaded", () => {
             toggleGroupInfo();
         });
     }
+    const fileInput = document.getElementById("fileInput");
+    if (fileInput) {
+        fileInput.addEventListener("change", showUploadButton);
+    }
 });
 
  // Stores the selected group ID
@@ -183,6 +187,59 @@ async function sendMessage() {
         console.error("Error sending message:", error);
     }
 }
+function showUploadButton() {
+    const fileInput = document.getElementById("fileInput");
+    const uploadBtn = document.getElementById("upload-btn");
+    
+    if (fileInput.files.length > 0) {
+        uploadBtn.style.display = "inline-block"; // Show upload button when a file is selected
+    } else {
+        uploadBtn.style.display = "none"; // Hide button if no file is selected
+    }
+}
+//upload file
+async function uploadFile() {
+    if (!selectedGroupId) {
+        alert("Please select a group first.");
+        return;
+    }
+
+    const fileInput = document.getElementById("fileInput");
+    if (!fileInput.files.length) {
+        alert("Please select a file to upload.");
+        return;
+    }
+
+    const file = fileInput.files[0];
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+        const response = await axios.post(`${baseURL}/api/upload`, formData, {
+            headers: { 
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "multipart/form-data"
+            }
+        });
+
+        // Emit file URL to group chat
+        const fileUrl = response.data.fileUrl;
+        socket.emit("sendMessage", {
+            message: fileUrl, 
+            groupId: selectedGroupId, 
+            senderId: userId, 
+            senderName: localStorage.getItem("userName") || "unknown",
+        });
+        setTimeout(() => {
+            alert(`File "${file.name}" uploaded successfully!`);
+            fileInput.value = ""; // Clear file input after upload
+            document.getElementById("upload-btn").style.display = "none"; // Hide upload button again
+        }, 1000);
+    } catch (error) {
+        console.error("Error uploading file:", error);
+        alert("Failed to upload file");
+    }
+}
 
 // Auto-scroll to bottom
 function scrollToBottom() {
@@ -208,15 +265,21 @@ async function loadGroupMessages(groupId) {
 }
 //display message
 function displayMessage(msg) {
-
-    const senderName = msg.senderName; // Ensure we don't display 'undefined'
+    const senderName = msg.senderName;
     const messageElement = document.createElement("div");
     messageElement.classList.add("message", msg.senderId === userId ? "sent" : "received");
-    messageElement.innerHTML = `<strong>${senderName}:</strong> ${msg.message}`;
+
+    if (msg.message.startsWith("http")) { 
+        // Display as a file link
+        messageElement.innerHTML = `<strong>${senderName}:</strong> <a href="${msg.message}" target="_blank">📁 Download File</a>`;
+    } else {
+        messageElement.innerHTML = `<strong>${senderName}:</strong> ${msg.message}`;
+    }
 
     messagesContainer.appendChild(messageElement);
     scrollToBottom();
 }
+
 
 // Show Group Info
 async function showGroupInfo(groupId) {

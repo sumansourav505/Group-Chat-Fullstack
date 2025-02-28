@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 
 const saltRounds = 10;
-const jwtSecret = process.env.JWT_SECRET || "secrete"; // Use env variable for security
+const jwtSecret = process.env.JWT_SECRET; // Use env variable for security
 
 // Function to generate JWT Token
 const generateAccessToken = (id, name) => {
