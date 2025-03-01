@@ -35,6 +35,8 @@ exports.uploadFile = (req, res) => {
     }
     
     const fileUrl = req.file.location;
+
+    
     res.status(200).json({ message: "File uploaded successfully", fileUrl });
 };
 

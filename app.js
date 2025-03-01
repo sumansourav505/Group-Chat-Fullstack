@@ -5,6 +5,7 @@ require("dotenv").config();
 const http = require("http"); 
 const { Server } = require("socket.io");
 const sequelize = require("./config/database");
+const archiveMessages = require("./cron/archiveMessages");
 
 const User = require("./models/user");
 const Group = require("./models/group");
@@ -96,6 +97,7 @@ sequelize
     .sync()
     .then(() => {
         console.log("Database synced successfully.");
+        archiveMessages();
         server.listen(4000, () => console.log("Server running at http://localhost:4000"));
     })
     .catch((error) => {
