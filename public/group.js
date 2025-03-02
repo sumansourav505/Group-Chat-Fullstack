@@ -28,6 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (fileInput) {
         fileInput.addEventListener("change", showUploadButton);
     }
+    
 });
 
  // Stores the selected group ID
@@ -279,7 +280,6 @@ function displayMessage(msg) {
     messagesContainer.appendChild(messageElement);
     scrollToBottom();
 }
-
 
 // Show Group Info
 async function showGroupInfo(groupId) {
