@@ -12,7 +12,7 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background: #f0f0f5;
+    background: linear-gradient(to right, #00c6ff, #0072ff);
 }
 
 .container {
@@ -20,14 +20,14 @@ body {
     width: 900px;
     height: 500px;
     background: white;
-    border-radius: 10px;
+    border-radius: 15px;
     overflow: hidden;
-    box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.1);
+    box-shadow: 0px 15px 30px rgba(0, 0, 0, 0.2);
 }
 
 .left-section {
     width: 40%;
-    background: #0a9c1e;
+    background: #0072ff;
     color: white;
     padding: 40px;
     text-align: center;
@@ -37,18 +37,14 @@ body {
 }
 
 .left-section h1 {
-    font-size: 22px;
+    font-size: 26px;
     font-weight: 600;
+    margin-top: 10px;
 }
 
-.left-section p {
-    font-size: 14px;
-    margin-bottom: 10px;
-}
-
-.left-section h2 {
-    font-size: 20px;
-    font-weight: 600;
+.left-section p, .left-section h2 {
+    font-size: 18px; 
+    margin-bottom: 15px;
 }
 
 .right-section {
@@ -60,30 +56,27 @@ body {
     position: relative;
 }
 
-.language-switch {
-    position: absolute;
-    top: 15px;
-    right: 20px;
-    font-size: 14px;
-    color: #888;
-    cursor: pointer;
-}
 
 h2 {
-    font-size: 22px;
+    font-size: 24px;
     margin-bottom: 15px;
 }
 
 .input-group {
-    margin-bottom: 15px;
+    margin-bottom: 20px;
 }
 
 .input-group input {
     width: 100%;
-    padding: 12px;
+    padding: 15px;
     border: 1px solid #ccc;
     border-radius: 5px;
-    font-size: 14px;
+    font-size: 16px;
+    transition: border-color 0.3s;
+}
+.input-group input:focus{
+    border-color: #0072ff;
+    outline: none; 
 }
 
 .password {
@@ -97,24 +90,13 @@ h2 {
     cursor: pointer;
 }
 
-.terms {
-    display: flex;
-    align-items: center;
-    font-size: 12px;
-    margin-bottom: 15px;
-}
-
-.terms input {
-    margin-right: 10px;
-}
-
 .signup-btn {
     width: 100%;
     background: #665dfe;
     color: white;
     border: none;
-    padding: 12px;
-    font-size: 16px;
+    padding: 15px;
+    font-size: 18px;
     border-radius: 5px;
     cursor: pointer;
 }
@@ -123,43 +105,33 @@ h2 {
     background: #665dfe;
     color: white;
     border: none;
-    padding: 12px;
-    font-size: 16px;
+    padding: 15px;
+    font-size: 18px;
     border-radius: 5px;
     cursor: pointer;
+}
+.login-btn:hover {
+    background: #554cdf;
+    transform: translateY(-2px);
 }
 
 .signup-btn:hover {
     background: #554cdf;
-}
-
-.or {
-    text-align: center;
-    margin: 15px 0;
-    font-size: 12px;
-    color: #888;
-}
-
-.social-icons {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    font-size: 20px;
-    color: #665dfe;
-}
-
-.social-icons i {
-    cursor: pointer;
+    transform: translateY(-2px);
 }
 
 .login-link {
     text-align: center;
     font-size: 14px;
-    margin-top: 15px;
+    margin-top: 20px;
 }
 
 .login-link a {
     color: #665dfe;
     font-weight: bold;
     text-decoration: none;
+    transition: color 0.3s;
+}
+.login-link a:hover {
+    color: #554cdf;
 }
