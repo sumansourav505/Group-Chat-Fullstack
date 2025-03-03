@@ -17,12 +17,11 @@
         <div class="chatbox">
             <div class="chat-header">
                 <h2 id="groupTitle">Select a Group</h2>
-                <button class="info-btn" onclick="toggleGroupInfo()">ℹ️ Info</button>
+                <button id="info-btn" class="info-btn" style="display: none;">ℹ️ Info</button>
             </div>
 
             <div id="messages"></div>
 
-            <!-- WhatsApp-style Input Box -->
             <div class="chat-input-container">
                 <input type="file" id="fileInput" hidden>
                 <input type="text" id="messageInput" placeholder="Type a message...">

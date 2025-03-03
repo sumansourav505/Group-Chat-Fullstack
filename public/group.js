@@ -30,7 +30,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     
 });
-
  // Stores the selected group ID
 
 const groupList = document.getElementById("groupList");
@@ -39,13 +38,12 @@ const messagesContainer = document.getElementById("messages");
 const groupMembersList = document.getElementById("groupMembersList");
 
 //socket events
-//listen for new messages
 socket.on('receiveMessage',(messageData)=>{
     if(messageData.groupId){
         displayMessage(messageData);
     }
 });
-//listen for user joining
+
 socket.on('userJoined',(data)=>{
     if(data.groupId===selectedGroupId){
         const joinMsg=document.createElement('div');
@@ -72,7 +70,6 @@ async function toggleGroupInfo() {
 
 // Load user groups
 async function loadUserGroups() {
-    console.log(localStorage.getItem("userName"));
     if (!userId) {
         console.error("User ID not found");
         return;
@@ -83,7 +80,7 @@ async function loadUserGroups() {
             headers: { Authorization: `Bearer ${token}` }
         });
 
-        groupList.innerHTML = ""; // Clear existing groups
+        groupList.innerHTML = "";
         response.data.forEach(group => {
             const li = document.createElement("li");
             li.textContent = group.name;
@@ -100,13 +97,13 @@ async function loadUserGroups() {
 async function selectGroup(groupId, groupName) {
     selectedGroupId = groupId;
     document.getElementById("groupTitle").textContent = groupName;
-    messagesContainer.innerHTML = ""; // Clear previous messages
+    messagesContainer.innerHTML = "";
 
     const info_Btn = document.getElementById("info-btn");
-    if (info_Btn) info_Btn.style.display = "inline-block"; // Show info button
+    if (info_Btn) info_Btn.style.display = "inline-block";
 
     const groupInfoSidebar = document.getElementById("groupInfoSidebar");
-    if (groupInfoSidebar) groupInfoSidebar.style.display = "none"; // Hide sidebar when switching groups
+    if (groupInfoSidebar) groupInfoSidebar.style.display = "none"; 
 
     await loadGroupMessages(groupId);
     socket.emit("joinGroup",{userId,groupId});
@@ -122,7 +119,7 @@ async function createGroup() {
             headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" }
         });
 
-        loadUserGroups(); // Reload groups after creation
+        loadUserGroups(); 
     } catch (error) {
         console.error("Error creating group:", error.response?.data || error.message);
     }
@@ -147,8 +144,8 @@ async function inviteUser() {
             { headers: { Authorization: `Bearer ${token}` } }
         );
 
-        alert(response.data.message); // Show success message
-        document.getElementById("inviteUserId").value = ""; // Clear input
+        alert(response.data.message); 
+        document.getElementById("inviteUserId").value = "";
     } catch (error) {
         console.error("Error inviting user:", error);
         alert(error.response?.data?.error || "Failed to invite user");
@@ -167,7 +164,6 @@ async function sendMessage() {
         alert("Message cannot be empty.");
         return;
     }
-    //const senderName=localStorage.getItem('userName')||'unknown'
     // Emit message through WebSocket
     socket.emit("sendMessage", {
         message,
@@ -182,8 +178,8 @@ async function sendMessage() {
             { headers: { Authorization: `Bearer ${token}` } }
         );
 
-        messageInput.value = ""; // Clear input field
-        await loadGroupMessages(selectedGroupId); // Refresh messages
+        messageInput.value = "";
+        await loadGroupMessages(selectedGroupId); 
     } catch (error) {
         console.error("Error sending message:", error);
     }
@@ -193,9 +189,9 @@ function showUploadButton() {
     const uploadBtn = document.getElementById("upload-btn");
     
     if (fileInput.files.length > 0) {
-        uploadBtn.style.display = "inline-block"; // Show upload button when a file is selected
+        uploadBtn.style.display = "inline-block"; 
     } else {
-        uploadBtn.style.display = "none"; // Hide button if no file is selected
+        uploadBtn.style.display = "none";
     }
 }
 //upload file
@@ -233,8 +229,8 @@ async function uploadFile() {
         });
         setTimeout(() => {
             alert(`File "${file.name}" uploaded successfully!`);
-            fileInput.value = ""; // Clear file input after upload
-            document.getElementById("upload-btn").style.display = "none"; // Hide upload button again
+            fileInput.value = "";
+            document.getElementById("upload-btn").style.display = "none";
         }, 1000);
     } catch (error) {
         console.error("Error uploading file:", error);
@@ -255,7 +251,7 @@ async function loadGroupMessages(groupId) {
             headers: { Authorization: `Bearer ${token}` }
         });
 
-        messagesContainer.innerHTML = ""; // Clear existing messages
+        messagesContainer.innerHTML = "";
 
         response.data.forEach(displayMessage);
 
@@ -271,7 +267,6 @@ function displayMessage(msg) {
     messageElement.classList.add("message", msg.senderId === userId ? "sent" : "received");
 
     if (msg.message.startsWith("http")) { 
-        // Display as a file link
         messageElement.innerHTML = `<strong>${senderName}:</strong> <a href="${msg.message}" target="_blank">📁 Download File</a>`;
     } else {
         messageElement.innerHTML = `<strong>${senderName}:</strong> ${msg.message}`;
@@ -310,7 +305,7 @@ async function showGroupInfo(groupId) {
             // Show the sidebar and adjust chatbox width
             groupInfoSidebar.classList.add("open");
             document.querySelector(".chatbox").classList.add("shrink");
-            //eventlistener for searching
+            
             document.getElementById("search-btn").addEventListener("click", searchGroupMember);
             document.getElementById("search-input").addEventListener("keyup", searchGroupMember);
             document.querySelectorAll("#groupInfoSidebar ul li").forEach(memberItem => {

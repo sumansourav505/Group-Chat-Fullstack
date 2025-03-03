@@ -1,4 +1,4 @@
-/* Reset default margin and padding */
+
 * {
     margin: 0;
     padding: 0;
@@ -6,13 +6,11 @@
     font-family: Arial, sans-serif;
 }
 
-/* Main container for the layout */
 .container {
     display: flex;
     height: 100vh;
 }
 
-/* Sidebar styling */
 .sidebar {
     width: 25%;
     background-color: #2c3e50;
@@ -21,9 +19,10 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.2);
+    transition: width 0.3s;
 }
 
-/* Group list styling */
 #groupList {
     list-style: none;
     width: 100%;
@@ -31,22 +30,23 @@
 }
 
 #groupList li {
-    padding: 10px;
+    padding: 15px;
     background-color: #345e4e;
     margin: 5px 0;
     cursor: pointer;
     text-align: center;
-    border-radius: 5px;
-    transition: background 0.3s;
+    border-radius: 10px;
+    transition: background 0.3s, transform 0.2s;
 }
 
 #groupList li:hover {
     background-color: #1abc9c;
+    transform: scale(1.05);
 }
 
-/* Button styling */
+
 button {
-    padding: 10px;
+    padding: 10px 15px;
     margin-top: 10px;
     border: none;
     border-radius: 5px;
@@ -54,14 +54,15 @@ button {
     color: white;
     font-size: 16px;
     cursor: pointer;
-    transition: background 0.3s;
+    transition: background 0.3s, transform 0.2s;
 }
 
 button:hover {
     background-color: #16a085;
+    transform: scale(1.05);
 }
 
-/* Chatbox styling */
+
 .chatbox {
     flex-grow: 1;
     display: flex;
@@ -69,45 +70,50 @@ button:hover {
     justify-content: space-between;
     padding: 20px;
     background-color: #ecf0f1;
-    transition: width 0.3s ease-in-out;
+    /* transition: width 0.3s ease-in-out; */
 }
 .chatbox.shrink {
-    width: 70%; /* Adjust width dynamically when sidebar opens */
+    width: 70%;
 }
 
-/* Chat messages section */
 #messages {
     flex-grow: 1;
     overflow-y: auto;
     background: white;
-    padding: 10px;
-    border-radius: 5px;
+    padding: 15px;
+    border-radius: 10px;
     border: 1px solid #bdc3c7;
     margin-bottom: 10px;
     display: flex;
     flex-direction: column;
-    gap: 8px; /* Space between messages */
-    max-height: 60vh;
+    gap: 8px; 
+    /* max-height: 60vh; */
 }
 
-/* General message styling */
-.message {
+/* .message {
     padding: 10px;
     border-radius: 10px;
     max-width: 75%;
     word-wrap: break-word;
     font-size: 14px;
     display: inline-block;
+} */
+.message {
+    padding: 12px;
+    border-radius: 15px;
+    max-width: 75%;
+    word-wrap: break-word;
+    font-size: 14px;
+    display: inline-block;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
-/* Sent messages (user's own messages) */
 .sent {
     align-self: flex-end;
     background-color: #dcf8c6; /* Light green (WhatsApp-like) */
     text-align: right;
 }
 
-/* Received messages (messages from others) */
 .received {
     align-self: flex-start;
     background-color: #ffffff; /* Light gray */
@@ -119,18 +125,16 @@ button:hover {
     margin: 5px 0;
 }
 
-/* Bold sender name */
 .message strong {
     font-weight: bold;
     margin-right: 5px;
 }
 
-/* WhatsApp-style message input field and buttons */
 .chat-input-container {
     display: flex;
     align-items: center;
     background: white;
-    padding: 10px;
+    padding: 15px;
     border-radius: 25px;
     border: 1px solid #bdc3c7;
     gap: 10px;
@@ -172,7 +176,6 @@ button:hover {
     background: #16a085;
 }
 
-/* Upload button should appear only after a file is selected */
 #uploadButton {
     display: none;
     padding: 10px;
@@ -187,7 +190,6 @@ button:hover {
     background: #0056b3;
 }
 
-/* Group Info Sidebar */
 .group-info-sidebar {
     width: 300px; /* Wider sidebar */
     background: linear-gradient(to bottom, #34495e, #2c3e50);
@@ -198,7 +200,7 @@ button:hover {
     top: 0;
     height: 100%;
     box-shadow: -4px 0 10px rgba(0, 0, 0, 0.2);
-    display: none; /* Initially hidden */
+    display: none;
     transition: all 0.3s ease-in-out;
 }
 .group-info-sidebar h3 {
@@ -217,6 +219,7 @@ button:hover {
     border-radius: 5px;
     text-align: center;
     cursor: pointer;
+    transition: background 0.3s;
 }
 .group-info-sidebar li:hover{
     background-color: rgba(255, 255, 255, 0.336);
@@ -307,9 +310,7 @@ button:hover {
     .group-info-sidebar {
         width: 100%;
         height: auto;
-        position: absolute;
-        top: 0;
-        right: 0;
+        position: relative;
     }
 
     #groupMembersSidebar {
